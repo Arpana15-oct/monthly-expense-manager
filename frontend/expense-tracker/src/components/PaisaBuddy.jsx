@@ -31,6 +31,7 @@ const PaisaBuddy = () => {
   const endRef = useRef(null);
   const inputRef = useRef(null);
   const recRef = useRef(null);
+  const fileRef = useRef(null);
 
   // naya message aate hi neeche scroll
   useEffect(() => {
@@ -122,8 +123,6 @@ const PaisaBuddy = () => {
       setSending(false);
     }
   };
-
-  const fileRef = useRef(null);
 
   const handleReceiptFile = async (file) => {
     if (!file || sending) return;
