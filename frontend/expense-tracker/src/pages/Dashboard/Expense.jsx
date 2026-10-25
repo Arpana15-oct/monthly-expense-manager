@@ -5,7 +5,7 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 import { FaPlus, FaTrash, FaArrowLeft, FaCalendarAlt, FaMoon, FaSun } from 'react-icons/fa'
 import { toast } from 'react-hot-toast'
 
-s
+
 const Expense = () => {
   const { expenses, addExpense, deleteExpense, getTotalExpenses, budgets, theme, toggleTheme } = useFinance()
   const [showForm, setShowForm] = useState(false)

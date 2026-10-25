@@ -54,7 +54,7 @@ const handleSubmit = async (e) => {
   }
 
   try {
-    // Only send required fields
+    
     const success = await register({
       fullName: formData.name,
       email: formData.email,
@@ -62,7 +62,7 @@ const handleSubmit = async (e) => {
     });
 
     if (success && imageFile) {
-      // Upload image
+     
       const formDataImage = new FormData();
       formDataImage.append('image', imageFile);
       await uploadImage(formDataImage);

@@ -16,7 +16,7 @@ exports.addIncome = async (req, res) => {
       source,
       amount: parseFloat(amount),
       date: date ? new Date(date) : new Date(),
-      category: category || "Other" // NEW field
+      category: category || "Other" 
     });
 
     await newIncome.save();
@@ -56,7 +56,7 @@ exports.downloadIncomeExcel = async (req, res) => {
 
     const data = income.map((item) => ({
       Source: item.source,
-      Category: item.category, // NEW
+      Category: item.category, 
       Amount: item.amount,
       Date: item.date
     }));

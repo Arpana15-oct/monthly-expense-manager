@@ -2,6 +2,9 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { FinanceProvider, useFinance } from './context/FinanceContext';
+import AiAssistant from './components/AiAssistant';
+import Goals from './pages/Dashboard/Goals'; 
+import PaisaBuddy from './components/PaisaBuddy';
 
 // Layouts
 import AuthLayout from './components/layouts/AuthLayout';
@@ -114,11 +117,14 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/goals" element={<ProtectedRoute><Goals /></ProtectedRoute>} />
 
             {/* Default redirect */}
             <Route path="/" element={<Navigate to="/dashboard" replace />} />
             <Route path="*" element={<Navigate to="/dashboard" replace />} />
           </Routes>
+          <AiAssistant /> 
+          <PaisaBuddy />  
         </div>
       </Router>
     </FinanceProvider>

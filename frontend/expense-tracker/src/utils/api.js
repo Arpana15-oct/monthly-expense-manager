@@ -68,3 +68,19 @@ export const downloadExpenseExcel = () => api.get('/expense/downloadexpenseexcel
 export const addBudget = (budgetData) => api.post('/budget/add', budgetData);
 export const getAllBudgets = () => api.get('/budget/get');
 export const deleteBudget = (id) => api.delete(`/budget/${id}`);
+
+export const getSuggestions = (refresh = false) =>
+  api.get('/insights/suggestions', { params: refresh ? { refresh: 1 } : {} });
+
+export const addGoal = (goalData) => api.post('/goal/add', goalData);
+export const getAllGoals = () => api.get('/goal/get');
+export const replanGoal = (id) => api.post(`/goal/${id}/replan`);
+export const deleteGoal = (id) => api.delete(`/goal/${id}`);
+
+export const sendBuddyMessage = (messages) => api.post('/buddy/chat', { messages });
+
+export const scanReceipt = (file) => {
+  const fd = new FormData();
+  fd.append('receipt', file);
+  return api.post('/buddy/receipt', fd, { headers: { 'Content-Type': 'multipart/form-data' }, timeout: 30000 });
+};

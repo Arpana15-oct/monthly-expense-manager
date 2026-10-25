@@ -1,8 +1,29 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useFinance } from '../../context/FinanceContext';
-import { FaWallet,FaArrowUp,FaArrowDown,FaPlus,FaMinus,FaChartLine,FaCalendarAlt,FaMoon,FaSun,FaSignOutAlt} from 'react-icons/fa';
+import { FaBullseye,FaWallet,FaArrowUp,FaArrowDown,FaPlus,FaMinus,FaChartLine,FaCalendarAlt,FaMoon,FaSun,FaSignOutAlt} from 'react-icons/fa';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
+
+
+// Har din ka total (khaali din = 0), purane se naye
+const dailyTotals = (transactions, days) => {
+  const byDay = {};
+  transactions.forEach((t) => {
+    const k = new Date(t.date).toISOString().slice(0, 10);
+    byDay[k] = (byDay[k] || 0) + t.amount;
+  });
+  const now = new Date();
+  const todayUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+  const out = [];
+  for (let i = days - 1; i >= 0; i--) {
+    const d = new Date(todayUTC - i * 86400000);
+    out.push({
+      date: d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', timeZone: 'UTC' }),
+      amount: byDay[d.toISOString().slice(0, 10)] || 0,
+    });
+  }
+  return out;
+};
 
 const Home = () => {
   const { dashboardData, theme, toggleTheme, logout, user } = useFinance();
@@ -25,15 +46,9 @@ const Home = () => {
   } = dashboardData;
 
   // Prepare chart data
-  const incomeData = last60daysIncome.transactions.map(item => ({
-    date: new Date(item.date).toLocaleDateString(),
-    amount: item.amount
-  }));
+  const incomeData = dailyTotals(last60daysIncome.transactions, 60);
 
-  const expenseData = last30daysExpenses.transactions.map(item => ({
-    date: new Date(item.date).toLocaleDateString(),
-    amount: item.amount
-  }));
+  const expenseData = dailyTotals(last30daysExpenses.transactions, 30);
 
   // Category spending data for pie chart
   const categoryData = recentTransaction
@@ -130,7 +145,7 @@ const Home = () => {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
           <Link
             to="/income"
             className="bg-green-600 text-white rounded-xl p-4 shadow-lg border border-green-700 hover:bg-green-700 transition-all duration-200 group"
@@ -190,9 +205,22 @@ const Home = () => {
               </div>
             </div>
           </Link>
-        </div>
-            className="bg-purple-600 text-white rounded-xl p-4 shadow-lg border border-purple-700 hover:bg-purple-700 transition-all duration-200 group"
 
+           <Link
+            to="/goals"
+            className="bg-orange-600 text-white rounded-xl p-4 shadow-lg border border-orange-700 hover:bg-orange-700 transition-all duration-200 group"
+          >
+            <div className="flex items-center">
+              <div className="w-10 h-10 bg-orange-800 rounded-lg flex items-center justify-center mr-3 group-hover:bg-orange-900 transition-colors duration-200">
+                <FaBullseye className="text-white" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-white">View Goals</h3>
+                <p className="text-sm text-orange-200">Track progress</p>
+              </div>
+            </div>
+          </Link>
+        </div>
         {/* Charts Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           {/* Income Chart */}
@@ -201,7 +229,7 @@ const Home = () => {
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={incomeData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
+                <XAxis dataKey="date" minTickGap={24} />
                 <YAxis />
                 <Tooltip formatter={(value) => [`$${value}`, 'Income']} />
                 <Bar dataKey="amount" fill="green" radius={[4, 4, 0, 0]} />
@@ -215,7 +243,7 @@ const Home = () => {
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={expenseData}>
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
+                <XAxis dataKey="date" minTickGap={24} />
                 <YAxis />
                 <Tooltip formatter={(value) => [`$${value}`, 'Expense']} />
                 <Bar dataKey="amount" fill="#EF4444" radius={[4, 4, 0, 0]} />
